@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { User } from '../../models/user';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
@@ -23,12 +23,15 @@ export class AuthService {
     return !this.jwtHelper.isTokenExpired(token);
   }
 
-  public login(email: string, password: string){
-return this.http.post<User>('http://pre.skinner.viveogroup.com/api/v1/login', { email, password })
-  	.pipe(
-      tap((user: User) => this.setSession(user)),
-      catchError(this.handleError<User>('login'))
-    );
+  public login(email: string, password: string): Observable<HttpResponse<any>>{
+      return this.http.get<any>(
+          'http://pre.skinner.viveogroup.com/api/v1/login', { observe: 'response' });
+
+    //return this.http.post<Any>('http://pre.skinner.viveogroup.com/api/v1/login', { email, password })
+    //  	.pipe(
+    //      tap((user: User) => this.setSession(user)),
+    //      catchError(this.handleError<User>('login'))
+    //    );
        //return this.http.post<User>('http://pre.skinner.viveogroup.com/api/v1/login', { email, password })
             // this is just the HTTP call, 
             // we still need to handle the reception of the token
